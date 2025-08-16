@@ -11,17 +11,6 @@ This project demonstrates a comprehensive understanding of modern web developmen
 
 ---
 
-## 🎥 Live Demo
-
-A quick tour of the AeroPulse user experience, from searching for a flight to viewing the interactive Global Price Map.
-
-<p align="center">
-  <img src="https://github.com/sadmanCR7/Aeropulse-Flight-Booking-Management-System/issues/2" alt="AeroPulse Demo GIF" width="800"/>
-</p>
-
-* **Note:** Replace the link above with a GIF screen recording of your application in action. This is highly recommended for a portfolio project.
-
----
 
 ## ✨ Key Features & Modules
 
@@ -47,7 +36,6 @@ Turn flight booking into an adventure. This interactive world map allows users t
 <p align="center">
   <img src="Picture27.png" alt="Global Price Map" width="800"/>
 </p>
-* **Note:** Replace with a screenshot of your Global Price Map in action.
 
 ### 🛠️ For Administrators
 
@@ -66,8 +54,6 @@ A single, deliberate exception to 3NF is the `total_fare` field in the `Booking`
 <p align="center">
   <img src="ER diagram.png" alt="AeroPulse ER Diagram" width="800"/>
 </p>
-* **Note:** Replace with an image of the ER Diagram you created.
-
 ---
 
 ## 📸 Application Screenshots
@@ -79,8 +65,6 @@ A single, deliberate exception to 3NF is the `total_fare` field in the `Booking`
 | ![Homepage](https://i.imgur.com/your_homepage_screenshot.png) | ![Dashboard](Picture10.png) |
 | **Printable E-Ticket** | **User Profile Page** |
 | ![Ticket](https://i.imgur.com/your_ticket_screenshot.png) | ![Profile Page](https://i.imgur.com/your_profile_screenshot.png) |
-
-* **Note:** Replace all links above with screenshots from your application.
 
 ---
 
