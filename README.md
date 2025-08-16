@@ -16,7 +16,7 @@ This project demonstrates a comprehensive understanding of modern web developmen
 A quick tour of the AeroPulse user experience, from searching for a flight to viewing the interactive Global Price Map.
 
 <p align="center">
-  <img src="[https://i.imgur.com/your_screen_record_link.gif](https://github.com/sadmanCR7/Aeropulse-Flight-Booking-Management-System/blob/main/Aeropulse_Project(Updated).mp4)" alt="AeroPulse Demo GIF" width="800"/>
+  <img src="https://github.com/sadmanCR7/Aeropulse-Flight-Booking-Management-System/issues/2" alt="AeroPulse Demo GIF" width="800"/>
 </p>
 
 * **Note:** Replace the link above with a GIF screen recording of your application in action. This is highly recommended for a portfolio project.
