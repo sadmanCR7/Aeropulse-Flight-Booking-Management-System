@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Flight Search Results{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">
+        Search Results
+        {% if departure_airport and destination_airport %}
+            <small class="text-muted fs-5">from {{ departure_airport.location }} to {{ destination_airport.location }}</small>
+        {% endif %}
+    </h1>
+
+    <div class="alert alert-info">
+        Showing flights for <strong>{{ num_adults }} Adult(s)</strong>
+        {% if num_children > 0 %}, <strong>{{ num_children }} Child(ren)</strong>{% endif %}
+        {% if num_infants > 0 %}, and <strong>{{ num_infants }} Infant(s)</strong>{% endif %}
+        in <strong>{{ seat_class|title }}</strong> class.
+    </div>
+
+    {% if flights %}
+        {% for flight in flights %}
+        <div class="card mb-3" data-aos="fade-up">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <h5 class="mb-1"><a href="{% url 'flight_detail' flight.flight_id %}" class="text-decoration-none">{{ flight.airline.airline_name }}</a></h5>
+                        <p class="text-muted mb-0">Flight #{{ flight.flight_id }}</p>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5>{{ flight.departure_time|time:"H:i" }}</h5>
+                                <p class="mb-0">{{ flight.departure_airport.airport_code }}</p>
+                            </div>
+                            <div class="text-center text-muted">
+                                →
+                            </div>
+                            <div>
+                                <h5>{{ flight.arrival_time|time:"H:i" }}</h5>
+                                <p class="mb-0">{{ flight.destination_airport.airport_code }}</p>
+                            </div>
+                        </div>
+                        <div class="text-center text-muted"><small>{{ flight.departure_time|date:"D, d M Y" }}</small></div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <!-- THIS BLOCK IS UPDATED TO SHOW THE CORRECT PRICE -->
+                        <h4>
+                            {% if seat_class == 'BUSINESS' %}
+                                ${{ flight.business_price }}
+                            {% else %}
+                                ${{ flight.economy_price }}
+                            {% endif %}
+                        </h4>
+                        <small class="text-muted">per person</small>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <!-- THIS LINK IS UPDATED TO CARRY ALL THE NEW DATA -->
+                        <a href="{% url 'book_flight' flight.flight_id %}?adults={{ num_adults }}&children={{ num_children }}&infants={{ num_infants }}&class={{ seat_class }}" class="btn btn-success">
+                            Book Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            No flights found matching your criteria. Please check the seat availability or try a different search.
+        </div>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{% url 'home_page' %}" class="btn btn-secondary">Search Again</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Your Flight Ticket{% endblock %}
+{% block extra_css %}
+<style>
+    .ticket-container { border: 2px dashed #007bff; padding: 20px; background-color: #fff; }
+    .ticket-header { border-bottom: 2px solid #000; }
+    .flight-info p { margin-bottom: 0.5rem; }
+    @media print {
+        body * { visibility: hidden; }
+        .printable-area, .printable-area * { visibility: visible; }
+        .printable-area { position: absolute; left: 0; top: 0; width: 100%; }
+        .no-print { display: none; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="printable-area ticket-container mx-auto" style="max-width: 800px;">
+        <div class="ticket-header d-flex justify-content-between align-items-center pb-2 mb-3">
+            <h2 class="mb-0">BOARDING PASS</h2>
+            <h4 class="mb-0">{{ ticket.booking.flight.airline.airline_name }}</h4>
+        </div>
+        <div class="row flight-info">
+            <div class="col-md-8">
+                <p><strong>PASSENGER:</strong> {{ ticket.booking.user.get_full_name|default:ticket.booking.user.username|upper }}</p>
+                <div class="row">
+                    <div class="col-6"><p><strong>FROM:</strong> {{ ticket.booking.flight.departure_airport.airport_name }}</p></div>
+                    <div class="col-6"><p><strong>TO:</strong> {{ ticket.booking.flight.destination_airport.airport_name }}</p></div>
+                </div>
+                 <div class="row">
+                    <div class="col-6"><p><strong>FLIGHT:</strong> {{ ticket.booking.flight.airline.airline_code }} {{ ticket.booking.flight.pk }}</p></div>
+                    <div class="col-6"><p><strong>DATE:</strong> {{ ticket.booking.flight.departure_time|date:"d M Y" }}</p></div>
+                </div>
+                 <div class="row">
+                    <div class="col-6"><p><strong>DEPARTURE:</strong> {{ ticket.booking.flight.departure_time|time:"H:i" }}</p></div>
+                    <!-- UPDATED PASSENGER AND CLASS INFO -->
+                    <div class="col-6"><p><strong>CLASS:</strong> {{ ticket.booking.seat_class|title }}</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-12"><p><strong>PASSENGERS:</strong> {{ ticket.booking.num_adults }} Adult(s), {{ ticket.booking.num_children }} Child(ren), {{ ticket.booking.num_infants }} Infant(s)</p></div>
+                </div>
+            </div>
+            <div class="col-md-4 text-center align-self-center">
+                <p class="mb-1"><strong>TICKET ID</strong></p>
+                <h3 class="mb-0">{{ ticket.ticket_id }}</h3>
+                <p class="mb-1 mt-3"><strong>STATUS</strong></p>
+                <h3 class="mb-0 text-success">{{ ticket.booking.status }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-4 no-print">
+        <button onclick="window.print()" class="btn btn-primary">Print Ticket</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

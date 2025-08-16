@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login to AeroPulse{% endblock %}
+
+{% block extra_css %}
+{# This block contains all the awesome styles for the premium look #}
+<style>
+    /* --- 1. Immersive Full-Screen Background --- */
+    body {
+        background-color: #0d1a26;
+        background-image: linear-gradient(135deg, rgba(10, 25, 47, 0.6), rgba(0, 0, 0, 0.8)), url('{% static 'images/login_bg.png' %}');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+    nav.navbar.bg-dark, footer.bg-dark {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    footer.bg-dark { border-top: 1px solid rgba(255, 255, 255, 0.1); }
+
+    /* --- 2. The Premium "Floating Glass" Card --- */
+    .auth-card-premium {
+        background: linear-gradient(135deg, rgba(20, 30, 48, 0.85), rgba(36, 59, 85, 0.75));
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 3rem;
+        color: #ffffff;
+    }
+
+    /* --- (All other styles for typography, forms, and buttons remain the same) --- */
+    .auth-card-premium h2 { font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.4); }
+    .auth-card-premium .form-label { color: #e9ecef; font-weight: 500; }
+    .auth-card-premium .form-control { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); color: #ffffff; border-radius: 8px; padding: 0.8rem 1rem; transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; }
+
+    /* === THIS IS THE ONLY LINE THAT HAS BEEN CHANGED === */
+    .auth-card-premium .form-control:focus { background: rgba(0, 0, 0, 0.4); border-color: #0d6efd; color: #ffffff; box-shadow: 0 0 10px rgba(13, 110, 253, 0.6); }
+
+    .auth-card-premium ::placeholder { color: rgba(255, 255, 255, 0.4); }
+    .btn-premium-login { font-weight: bold; padding: 0.8rem; border-radius: 8px; background: linear-gradient(90deg, #0d6efd, #0056b3); border: none; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .btn-premium-login:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25); }
+    .auth-card-premium #togglePassword { color: #adb5bd; }
+    .auth-card-premium a { color: #82c0ff; text-decoration: none; }
+    .auth-card-premium a:hover { text-decoration: underline; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    {# THIS IS THE CORRECTED LAYOUT #}
+    <div class="row align-items-center" style="min-height: 70vh;">
+        <div class="col-lg-5 offset-lg-1 col-md-7" data-aos="zoom-in-up" data-aos-duration="800">
+            <div class="auth-card-premium">
+                <h2 class="text-center mb-4">Log in to AeroPulse</h2>
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger p-2 text-center border-0 bg-danger-subtle text-danger-emphasis">
+                        {% for error in form.non_field_errors %}<small>{{ error }}</small>{% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                        {{ form.username }}
+                    </div>
+                    <div class="mb-4">
+                        <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+                        <div class="position-relative">
+                            {{ form.password }}
+                            <i class="fas fa-eye-slash" id="togglePassword" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-premium-login w-100 mt-3">Log In</button>
+                </form>
+                <div class="text-center mt-4">
+                    <small class="text-white-50">Don't have an account? <a href="{% url 'register_step1' %}" class="fw-bold">Register here</a></small>
+                </div>
+            </div>
+        </div>
+        {# An empty column on the right to help with alignment #}
+        <div class="col-lg-6 col-md-5"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#id_password');
+    if (togglePassword && password) {
+        togglePassword.addEventListener('click', function () {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
+</script>
+{% endblock %}

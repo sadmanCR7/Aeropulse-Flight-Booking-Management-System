@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Update Profile{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Update Your Profile</h2>
+    <form method="post" enctype="multipart/form-data"> {# Add enctype for file uploads #}
+        {% csrf_token %}
+        <div class="card shadow-sm">
+            <div class="card-header"><h4>Account Information</h4></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3"><label class="form-label">First Name</label>{{ user_form.first_name }}</div>
+                    <div class="col-md-6 mb-3"><label class="form-label">Last Name</label>{{ user_form.last_name }}</div>
+                </div>
+                <div class="mb-3"><label class="form-label">Email Address</label>{{ user_form.email }}</div>
+            </div>
+        </div>
+        <div class="card mt-4 shadow-sm">
+            <div class="card-header"><h4>Contact & Photo</h4></div>
+            <div class="card-body">
+                <div class="mb-3"><label class="form-label">Phone Number</label>{{ profile_form.phone_number }}</div>
+                <div class="mb-3"><label class="form-label">Address</label>{{ profile_form.address }}</div>
+                <div class="mb-3"><label class="form-label">Update Profile Photo</label>{{ profile_form.profile_photo }}</div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success mt-4">Save Changes</button>
+        <a href="{% url 'profile_view' %}" class="btn btn-secondary mt-4">Cancel</a>
+    </form>
+</div>
+{% endblock %}

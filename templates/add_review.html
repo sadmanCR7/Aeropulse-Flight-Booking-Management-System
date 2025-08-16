@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Add Review{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2>Add Your Review for {{ flight.airline.airline_name }} Flight #{{ flight.flight_id }}</h2>
+    <p>Sharing your experience helps other travelers.</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_rating" class="form-label">Rating</label>
+            {{ form.rating }}
+        </div>
+        <div class="mb-3">
+            <label for="id_comment" class="form-label">Comment</label>
+            {{ form.comment }}
+        </div>
+        <button type="submit" class="btn btn-success">Submit Review</button>
+    </form>
+</div>
+{% endblock %}

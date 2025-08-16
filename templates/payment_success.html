@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Payment Successful{% endblock %}
+
+{% block content %}
+<div class="container my-5 text-center">
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+        <div class="card-body p-5">
+            <h1 class="text-success">Payment Successful!</h1>
+            <p class="lead">Your booking is confirmed. Your ticket and invoice are now available.</p>
+            <hr>
+            <h5 class="card-title">Booking #{{ booking.booking_id }}</h5>
+            <p><strong>Flight:</strong> {{ booking.flight.airline.airline_name }} from {{ booking.flight.departure_airport.airport_code }} to {{ booking.flight.destination_airport.airport_code }}</p>
+            <p><strong>Departure:</strong> {{ booking.flight.departure_time|date:"l, F j, Y, H:i" }}</p>
+
+            <!-- THESE ARE THE BUTTONS, INCLUDING THE INVOICE LINK -->
+            <div class="d-grid gap-2 d-md-flex justify-content-center mt-4">
+                <a href="{% url 'view_ticket' booking.ticket.ticket_id %}" class="btn btn-primary fw-bold"><i class="fas fa-ticket-alt me-2"></i>View/Print Ticket</a>
+                <a href="{% url 'view_invoice' booking.payment.invoice.invoice_id %}" class="btn btn-secondary"><i class="fas fa-file-invoice me-2"></i>View Invoice</a>
+            </div>
+        </div>
+    </div>
+     <div class="mt-4">
+         <a href="{% url 'dashboard' %}" class="btn btn-link">Go to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

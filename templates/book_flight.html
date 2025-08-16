@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Confirm Booking{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">Confirm Your Booking</h1>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h4><i class="fas fa-plane-departure me-2"></i>Flight Details</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ flight.airline.airline_name }} - Flight #{{ flight.flight_id }}</h5>
+                    <p class="card-text">
+                        <strong>From:</strong> {{ flight.departure_airport.airport_name }} ({{ flight.departure_airport.airport_code }})<br>
+                        <strong>To:</strong> {{ flight.destination_airport.airport_name }} ({{ flight.destination_airport.airport_code }})
+                    </p>
+                    <hr>
+                    <p class="card-text">
+                        <strong>Departure:</strong> {{ flight.departure_time|date:"l, F j, Y, H:i" }}<br>
+                        <strong>Arrival:</strong> {{ flight.arrival_time|date:"l, F j, Y, H:i" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h4><i class="fas fa-file-invoice-dollar me-2"></i>Fare Summary</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Class:</strong> <span class="badge bg-info fs-6">{{ seat_class|title }}</span></p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span>Adults ({{ num_adults }})</span>
+                            <span>${{ price_per_person }} x {{ num_adults }}</span>
+                        </li>
+                        {% if num_children > 0 %}
+                        <li class="list-group-item d-flex justify-content-between px-0">
+                            <span>Children ({{ num_children }})</span>
+                            <span>${{ price_per_person }} x {{ num_children }}</span>
+                        </li>
+                        {% endif %}
+                         {% if num_infants > 0 %}
+                        <li class="list-group-item d-flex justify-content-between px-0 text-muted">
+                            <span>Infants ({{ num_infants }})</span>
+                            <span>(No charge)</span>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    <hr>
+                    <h4 class="d-flex justify-content-between">
+                        <strong>Total Fare:</strong>
+                        <strong>${{ total_fare }}</strong>
+                    </h4>
+                </div>
+                <div class="card-footer p-3">
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success w-100 fw-bold">Confirm & Proceed to Payment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

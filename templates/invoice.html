@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Invoice #{{ invoice.invoice_id }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card mx-auto shadow-sm" style="max-width: 800px;">
+        <div class="card-header bg-dark text-white d-flex justify-content-between">
+            <h3>Invoice #{{ invoice.invoice_id }}</h3>
+            <span>Date: {{ invoice.issue_date|date:"F j, Y" }}</span>
+        </div>
+        <div class="card-body p-4">
+            <p><strong>Billed To:</strong> {{ invoice.payment.booking.user.get_full_name|default:invoice.payment.booking.user.username }}</p>
+            <p><strong>Payment Method:</strong> {{ invoice.payment.method }}</p>
+            <hr>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Class</th>
+                        <th>Passengers</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            Flight Ticket: {{ invoice.payment.booking.flight.departure_airport.airport_code }} → {{ invoice.payment.booking.flight.destination_airport.airport_code }}
+                            <br>
+                            <small class="text-muted">{{ invoice.payment.booking.flight.airline.airline_name }}</small>
+                        </td>
+                        <td>{{ invoice.payment.booking.seat_class|title }}</td>
+                        <td>{{ invoice.payment.booking.total_passengers }}</td>
+                        <td>${{ invoice.payment.amount }}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="fw-bold fs-5">
+                        <td colspan="3" class="text-end border-0">Grand Total</td>
+                        <td class="border-0">${{ invoice.payment.amount }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <!-- THIS IS THE PRINT BUTTON THAT WAS MISSING -->
+    <div class="text-center mt-4 no-print">
+        <button onclick="window.print()" class="btn btn-primary"><i class="fas fa-print me-2"></i>Print Invoice</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

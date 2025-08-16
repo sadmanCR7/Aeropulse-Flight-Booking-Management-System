@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Welcome to AeroPulse{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{% static 'images/home_bg.png' %}') no-repeat center center;
+        background-size: cover;
+        color: white;
+        padding: 10rem 0;
+        text-align: center;
+    }
+    .hero-section .display-4 { font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.6); }
+    .search-form-card {
+        background-color: rgba(255, 255, 255, 0.95);
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <h1 class="display-4">Find Your Next Adventure</h1>
+        <p class="lead">Book flights to international destinations with ease.</p>
+    </div>
+</div>
+
+<div class="container mt-n5">
+    <div class="card p-4 search-form-card" data-aos="fade-up" data-aos-delay="200">
+        <h2 class="mb-4 text-center">Search Flights</h2>
+        <form action="{% url 'search_results' %}" method="get">
+            <div class="row g-3 mb-3">
+                <div class="col-md">
+                    <!-- ICON ADDED HERE -->
+                    <label for="departure_airport" class="form-label fw-bold"><i class="fas fa-plane-departure me-2"></i>From</label>
+                    <select id="departure_airport" name="departure_airport" class="searchable-select" required>
+                        <option value="" selected disabled>Type to search for an airport...</option>
+                        {% for airport in airports %}<option value="{{ airport.airport_code }}">{{ airport.location }} ({{ airport.airport_code }})</option>{% endfor %}
+                    </select>
+                </div>
+                <div class="col-md">
+                    <!-- ICON ADDED HERE -->
+                    <label for="destination_airport" class="form-label fw-bold"><i class="fas fa-plane-arrival me-2"></i>To</label>
+                    <select id="destination_airport" name="destination_airport" class="searchable-select" required>
+                        <option value="" selected disabled>Type to search for an airport...</option>
+                        {% for airport in airports %}<option value="{{ airport.airport_code }}">{{ airport.location }} ({{ airport.airport_code }})</option>{% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Passengers & Class</label>
+                    <div class="passenger-dropdown dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="passengerDropdownBtn" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                            1 Adult, Economy
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="passengerDropdownBtn" style="width: 300px; padding: 15px;">
+                            <div class="mb-3">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="seat_class" id="economy_class" value="ECONOMY" checked>
+                                    <label class="form-check-label" for="economy_class">Economy</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="seat_class" id="business_class" value="BUSINESS">
+                                    <label class="form-check-label" for="business_class">Business</label>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="counter-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <div><h6 class="mb-0">Adults</h6><small class="text-muted">12+ years</small></div>
+                                <div><button type="button" class="btn btn-sm btn-outline-secondary counter-btn" data-type="adults" data-action="minus">-</button> <span id="adults_count" class="mx-2">1</span> <button type="button" class="btn btn-sm btn-outline-secondary counter-btn" data-type="adults" data-action="plus">+</button></div>
+                            </div>
+                            <div class="counter-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <div><h6 class="mb-0">Children</h6><small class="text-muted">2-11 years</small></div>
+                                <div><button type="button" class="btn btn-sm btn-outline-secondary counter-btn" data-type="children" data-action="minus">-</button> <span id="children_count" class="mx-2">0</span> <button type="button" class="btn btn-sm btn-outline-secondary counter-btn" data-type="children" data-action="plus">+</button></div>
+                            </div>
+                            <div class="counter-row" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div><h6 class="mb-0">Infants</h6><small class="text-muted">under 2 years</small></div>
+                                <div><button type="button" class="btn btn-sm btn-outline-secondary counter-btn" data-type="infants" data-action="minus">-</button> <span id="infants_count" class="mx-2">0</span> <button type="button" class="btn btn-sm btn-outline-secondary counter-btn" data-type="infants" data-action="plus">+</button></div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="num_adults" id="num_adults" value="1">
+                    <input type="hidden" name="num_children" id="num_children" value="0">
+                    <input type="hidden" name="num_infants" id="num_infants" value="0">
+                </div>
+                <div class="col-md-6 d-grid">
+                    <button type="submit" class="btn btn-primary w-100">Search Flights</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var selects = document.querySelectorAll('.searchable-select');
+        for (var i = 0; i < selects.length; i++) {
+            new TomSelect(selects[i], { create: false, sortField: { field: "text", direction: "asc" } });
+        }
+        const passengerCounts = { adults: 1, children: 0, infants: 0 };
+        function updateDisplay() {
+            const adults = passengerCounts.adults;
+            const children = passengerCounts.children;
+            const infants = passengerCounts.infants;
+            const seatClass = document.querySelector('input[name="seat_class"]:checked').value;
+            let displayText = `${adults} Adult`;
+            if (children > 0) displayText += `, ${children} Child` + (children > 1 ? 'ren' : '');
+            if (infants > 0) displayText += `, ${infants} Infant` + (infants > 1 ? 's' : '');
+            displayText += `, ${seatClass.charAt(0).toUpperCase() + seatClass.slice(1).toLowerCase()}`;
+            document.getElementById('passengerDropdownBtn').textContent = displayText;
+            document.getElementById('adults_count').textContent = adults;
+            document.getElementById('children_count').textContent = children;
+            document.getElementById('infants_count').textContent = infants;
+            document.getElementById('num_adults').value = adults;
+            document.getElementById('num_children').value = children;
+            document.getElementById('num_infants').value = infants;
+        }
+        document.querySelectorAll('.counter-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const type = this.dataset.type;
+                const action = this.dataset.action;
+                if (action === 'plus') {
+                    if ((type === 'adults' || type === 'children') && (passengerCounts.adults + passengerCounts.children < 9)) {
+                        passengerCounts[type]++;
+                    } else if (type === 'infants' && passengerCounts[type] < passengerCounts.adults) {
+                        passengerCounts[type]++;
+                    }
+                } else if (action === 'minus') {
+                    if (type === 'adults' && passengerCounts[type] > 1) {
+                        passengerCounts[type]--;
+                        if (passengerCounts.infants > passengerCounts.adults) {
+                            passengerCounts.infants = passengerCounts.adults;
+                        }
+                    } else if (passengerCounts[type] > 0 && type !== 'adults') {
+                        passengerCounts[type]--;
+                    }
+                }
+                updateDisplay();
+            });
+        });
+        document.querySelectorAll('input[name="seat_class"]').forEach(radio => radio.addEventListener('change', updateDisplay));
+        updateDisplay();
+    });
+</script>
+{% endblock %}

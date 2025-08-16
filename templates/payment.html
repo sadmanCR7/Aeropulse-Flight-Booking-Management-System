@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Complete Payment{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">Secure Payment Gateway</h1>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-header"><h4>Payment Form (Simulation)</h4></div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="card_name" class="form-label">Name on Card</label>
+                            <input type="text" class="form-control" id="card_name" value="{{ user.get_full_name|default:user.username }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="card_number" class="form-label">Card Number</label>
+                            <input type="text" class="form-control" id="card_number" value="4242 4242 4242 4242" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="expiry" class="form-label">Expiry Date</label>
+                                <input type="text" class="form-control" id="expiry" value="12/28" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cvv" class="form-label">CVV</label>
+                                <input type="text" class="form-control" id="cvv" value="123" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 btn-lg">Pay ${{ total_amount }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-header"><h4>Order Summary</h4></div>
+                <div class="card-body">
+                    <p><strong>Flight:</strong> {{ booking.flight.departure_airport.airport_code }} to {{ booking.flight.destination_airport.airport_code }}</p>
+                    <p><strong>Airline:</strong> {{ booking.flight.airline.airline_name }}</p>
+                    <p><strong>Tickets:</strong> {{ booking.number_of_tickets }}</p>
+                    <hr>
+                    <h4 class="d-flex justify-content-between">
+                        <span>Total:</span>
+                        <span>${{ total_amount }}</span>
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

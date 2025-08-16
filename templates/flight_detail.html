@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Flight Details{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>{{ flight.airline.airline_name }} - Flight #{{ flight.flight_id }}</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Route:</strong> {{ flight.departure_airport.airport_name }} to {{ flight.destination_airport.airport_name }}</p>
+            <p><strong>Departure:</strong> {{ flight.departure_time|date:"l, F j, Y, H:i" }}</p>
+        </div>
+    </div>
+
+    <h3>Reviews <a href="{% url 'add_review' flight.flight_id %}" class="btn btn-primary btn-sm ms-2">Leave a Review</a></h3>
+    <hr>
+    {% for review in reviews %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <p class="card-text">{{ review.comment }}</p>
+            <p class="card-text">
+                <strong>Rating: {{ review.rating }}/5</strong>
+                <br>
+                <small class="text-muted">by {{ review.user.username }} on {{ review.review_date|date:"d M Y" }}</small>
+            </p>
+        </div>
+    </div>
+    {% empty %}
+    <p>No reviews for this flight yet. Be the first to leave one!</p>
+    {% endfor %}
+</div>
+{% endblock %}

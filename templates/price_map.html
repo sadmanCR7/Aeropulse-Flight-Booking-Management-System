@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Global Price Map{% endblock %}
+
+{% block extra_css %}
+<!-- Add CSS for Leaflet.js map library -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+    #map { height: 70vh; width: 100%; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+    .legend { background: white; padding: 10px; border-radius: 5px; line-height: 1.5; }
+    .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="text-center mb-4">
+        <h1>Global Price Map</h1>
+        <p class="lead text-muted">Select your departure airport to see where you can fly!</p>
+    </div>
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6">
+            <label for="origin-select" class="form-label fw-bold">Select Departure Airport:</label>
+            <select id="origin-select" class="searchable-select">
+                <option value="">Select an origin...</option>
+                {% for airport in airports %}
+                <option value="{{ airport.airport_code }}">{{ airport.location }} ({{ airport.airport_code }})</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div id="map"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Add JS for Leaflet.js map library -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+{# REMOVED the broken script tag that tried to load the JSON file #}
+{# <script src="{% static 'js/countries.geo.json' %}"></script> #}
+
+<script>
+document.addEventListener("DOMContentLoaded", async function() {
+    // Initialize the searchable dropdown
+    var originSelect = new TomSelect('#origin-select');
+
+    // Initialize the map
+    var map = L.map('map').setView([20, 0], 2);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap © CARTO', maxZoom: 6, minZoom: 2
+    }).addTo(map);
+
+    var geojsonLayer;
+
+    // --- THIS IS THE NEW, CORRECT WAY TO LOAD THE JSON DATA ---
+    // We use an async function and 'await' to make sure the data is loaded first
+    const response = await fetch("{% static 'js/countries.geo.json' %}");
+    const countriesData = await response.json();
+    // --- END OF NEW LOADING LOGIC ---
+
+    function getColor(price) { /* ... (this function is unchanged) ... */
+        return price > 1000 ? '#d73027' : price > 750 ? '#fc8d59' : price > 500 ? '#fee090' : price > 250 ? '#a6d96a' : '#1a9850';
+    }
+
+    function style(feature) { /* ... (this function is unchanged) ... */
+        return { fillColor: getColor(feature.properties.price), weight: 1, opacity: 1, color: 'white', fillOpacity: 0.7 };
+    }
+
+    function updateMap(originCode) {
+        fetch(`/api/price-map/?origin=${originCode}`)
+            .then(response => response.json())
+            .then(data => {
+                if (geojsonLayer) map.removeLayer(geojsonLayer);
+
+                countriesData.features.forEach(feature => {
+                    const countryName = feature.properties.name;
+                    // Robust country name mapping
+                    const countryNameMap = { "United States of America": "USA", "United Kingdom": "UK", "United Arab Emirates": "UAE" };
+                    const simplifiedName = Object.keys(countryNameMap).find(key => countryNameMap[key] === countryName) || countryName;
+
+                    if (data[countryName] || data[simplifiedName]) {
+                        feature.properties.price = data[countryName] || data[simplifiedName];
+                    } else {
+                        feature.properties.price = null;
+                    }
+                });
+
+                geojsonLayer = L.geoJson(countriesData, {
+                    style: style,
+                    onEachFeature: function (feature, layer) {
+                        if(feature.properties.price) {
+                            layer.bindPopup(`<strong>${feature.properties.name}</strong><br>Cheapest flight: $${feature.properties.price}`);
+                        } else {
+                            layer.bindPopup(`<strong>${feature.properties.name}</strong><br>No flights found`);
+                        }
+                    }
+                }).addTo(map);
+            });
+    }
+
+    originSelect.on('change', function(value) {
+        if (value) updateMap(value);
+    });
+
+    var legend = L.control({position: 'bottomright'});
+    legend.onAdd = function (map) { /* ... (this function is unchanged) ... */
+        var div = L.DomUtil.create('div', 'info legend');
+        var grades = [0, 250, 500, 750, 1000];
+        div.innerHTML += '<h4>Price ($)</h4>';
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML += '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' + grades[i] + (grades[i + 1] ? '–' + grades[i + 1] + '<br>' : '+');
+        }
+        return div;
+    };
+    legend.addTo(map);
+});
+</script>
+{% endblock %}

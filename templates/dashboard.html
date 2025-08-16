@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}My Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Welcome, {{ user.get_full_name|default:user.username }}!</h1>
+<p>This is your personal dashboard. Here you can view your past and upcoming flights.</p>
+
+<div class="card">
+    <div class="card-header">
+        <h3>My Bookings</h3>
+    </div>
+    <div class="card-body">
+        {% if bookings %}
+            <ul class="list-group list-group-flush">
+                {% for booking in bookings %}
+                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                    <div class="me-auto">
+                        <h5 class="mb-1">{{ booking.flight.airline.airline_name }}: {{ booking.flight.departure_airport.airport_code }} → {{ booking.flight.destination_airport.airport_code }}</h5>
+                        <p class="mb-1">
+                            <small class="text-muted">
+                                Departure: {{ booking.flight.departure_time|date:"D, d M Y" }} |
+                                Class: {{ booking.seat_class|title }} |
+                                Passengers: {{ booking.num_adults }} Adult{% if booking.num_adults > 1 %}s{% endif %}{% if booking.num_children > 0 %}, {{ booking.num_children }} Child{% if booking.num_children > 1 %}ren{% endif %}{% endif %}
+                            </small>
+                        </p>
+                    </div>
+                    <div class="mt-2 mt-md-0">
+                        <span class="badge
+                            {% if booking.status == 'CONFIRMED' %}bg-success
+                            {% elif booking.status == 'CANCELLED' %}bg-danger
+                            {% else %}bg-warning text-dark{% endif %} me-2">
+                            {{ booking.status }}
+                        </span>
+                        {% if booking.status == 'CONFIRMED' %}
+                            <a href="{% url 'view_ticket' booking.ticket.ticket_id %}" class="btn btn-sm btn-outline-primary">View Ticket</a>
+                            <!-- ADDED VIEW INVOICE LINK -->
+                            <a href="{% url 'view_invoice' booking.payment.invoice.invoice_id %}" class="btn btn-sm btn-outline-secondary">View Invoice</a>
+                            <a href="{% url 'cancel_booking' booking.booking_id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to cancel this booking? A cancellation fee may apply.');">Cancel</a>
+                            <a href="{% url 'add_review' booking.flight.flight_id %}" class="btn btn-sm btn-outline-info">Leave Review</a>
+                        {% elif booking.status == 'PENDING' %}
+                            <a href="{% url 'payment' booking.booking_id %}" class="btn btn-sm btn-outline-success">Pay Now</a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-center">You have not made any bookings yet.</p>
+            <div class="text-center">
+                <a href="{% url 'home_page' %}" class="btn btn-primary">Find a Flight</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
