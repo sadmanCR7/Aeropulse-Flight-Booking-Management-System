@@ -64,7 +64,7 @@ The database was designed from a conceptual E-R Diagram to a relational schema, 
 A single, deliberate exception to 3NF is the `total_fare` field in the `Booking` table. This is a standard denormalization practice to "snapshot" the price at the time of transaction and significantly improve query performance.
 
 <p align="center">
-  <img src="https://i.imgur.com/your_er_diagram_link.png" alt="AeroPulse ER Diagram" width="800"/>
+  <img src="ER diagram.png" alt="AeroPulse ER Diagram" width="800"/>
 </p>
 * **Note:** Replace with an image of the ER Diagram you created.
 
