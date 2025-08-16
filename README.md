@@ -45,7 +45,7 @@ What truly sets AeroPulse apart is its focus on travel discovery.
 Turn flight booking into an adventure. This interactive world map allows users to select a departure airport and instantly see a "heatmap" of global travel affordability, with countries color-coded by the cheapest available flight price. It’s a powerful data visualization tool that answers the question: "Where in the world can I afford to go?"
 
 <p align="center">
-  <img src="https://i.imgur.com/your_price_map_screenshot.png" alt="Global Price Map" width="800"/>
+  <img src="Picture27.png" alt="Global Price Map" width="800"/>
 </p>
 * **Note:** Replace with a screenshot of your Global Price Map in action.
 
