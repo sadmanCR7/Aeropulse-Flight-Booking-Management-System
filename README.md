@@ -74,7 +74,7 @@ A single, deliberate exception to 3NF is the `total_fare` field in the `Booking`
 
 | Login Page (Glassmorphism UI) | Registration Wizard (with Progress Bar) |
 | :---: | :---: |
-| ![Login Page](https://i.imgur.com/your_login_screenshot.png) | ![Registration Page](https://i.imgur.com/your_registration_screenshot.png) |
+| ![Login Page](Picture2.png) | ![Registration Page](Picture3.png) |
 | **Homepage Search** | **Passenger Dashboard** |
 | ![Homepage](https://i.imgur.com/your_homepage_screenshot.png) | ![Dashboard](https://i.imgur.com/your_dashboard_screenshot.png) |
 | **Printable E-Ticket** | **User Profile Page** |
