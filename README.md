@@ -62,7 +62,7 @@ A single, deliberate exception to 3NF is the `total_fare` field in the `Booking`
 | :---: | :---: |
 | ![Login Page](Picture2.png) | ![Registration Page](Picture3.png) |
 | **Homepage Search** | **Passenger Dashboard** |
-| ![Homepage](Picture1.png) | ![Dashboard](Screenshot 2025-08-17 020314.png) |
+| ![Homepage](Picture1.png) | ![Dashboard](dashboard.png.png) |
 | **Printable E-Ticket** | **User Profile Page** |
 | ![Ticket](Picture14.png) | ![Profile Page](Picture9.png) |
 
